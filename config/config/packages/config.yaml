@@ -1,0 +1,7 @@
+mongo_db_migrations:
+  collection_name: "migration_versions"
+  database_name: "short_links"
+  dir_name: "%kernel.project_dir%/src/Migrations"
+  script_dir_name: "%kernel.project_dir%/scripts"
+  name: "MongoDB Migrations"
+  namespace: "App\\Migrations"
