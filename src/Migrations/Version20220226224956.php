@@ -7,12 +7,13 @@ use App\Document\Link;
 use App\Document\Token;
 use App\Document\User;
 use MongoDB\Database;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20220226224956 extends AbstractMigration
+class Version20220226224956 extends AbstractMigration implements ContainerAwareInterface
 {
     private ContainerInterface $container;
 
