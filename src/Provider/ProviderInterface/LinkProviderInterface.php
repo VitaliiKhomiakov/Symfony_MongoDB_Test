@@ -5,13 +5,20 @@ namespace App\Provider\ProviderInterface;
 
 use App\Document\Link;
 use App\Document\User;
+use App\Dto\Model\GroupedLinks;
 use App\Repository\LinkRepository;
+use App\Repository\UserRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 interface LinkProviderInterface
 {
-    public function __construct(DocumentManager $documentManager, ValidatorInterface $validator, LinkRepository $linkRepository);
+    public function __construct(
+      DocumentManager $documentManager,
+      ValidatorInterface $validator,
+      LinkRepository $linkRepository,
+      UserRepository $userRepository
+    );
 
     public function createLink(User $user, string $url);
     public function setLink(Link $link);
@@ -21,4 +28,6 @@ interface LinkProviderInterface
     public function getTotal(): int;
 
     public function getFullLink(string $shortUrl): ?string;
+
+    public function getGroupedLinks($userId = '', string $date = null): GroupedLinks;
 }

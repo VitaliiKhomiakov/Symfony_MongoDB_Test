@@ -5,8 +5,11 @@ namespace App\Provider;
 
 use App\Document\Link;
 use App\Document\User;
+use App\Dto\Model\GroupedLinks;
 use App\Provider\ProviderInterface\LinkProviderInterface;
 use App\Repository\LinkRepository;
+use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Exception;
@@ -16,15 +19,18 @@ class LinkProvider extends BaseProvider implements LinkProviderInterface
 {
     private Link $link;
     private LinkRepository $linkRepository;
+    private UserRepository $userRepository;
 
     public function __construct(
       DocumentManager $documentManager,
       ValidatorInterface $validator,
-      LinkRepository $linkRepository
+      LinkRepository $linkRepository,
+      UserRepository $userRepository
     )
     {
         parent::__construct($documentManager, $validator);
         $this->linkRepository = $linkRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -36,7 +42,7 @@ class LinkProvider extends BaseProvider implements LinkProviderInterface
         $link = new Link();
         $link->setLink($url)
           ->setShortLink(base64_encode(substr(str_shuffle($url), 0, 7)))
-//          ->setUser($user)
+          ->setUser($user)
           ->setDate(new \DateTime());
 
         $this->validate($link);
@@ -70,6 +76,27 @@ class LinkProvider extends BaseProvider implements LinkProviderInterface
     public function getFullLink(string $shortUrl): ?string
     {
         return $this->linkRepository->getFullLink($shortUrl);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getGroupedLinks($userId = '', string $date = null): GroupedLinks
+    {
+        $user = null;
+        if ($userId) {
+            $user = $this->userRepository->find($userId);
+
+            if (!$user) {
+                throw new Exception('User not Found');
+            }
+        }
+
+        if ($date && !DateTime::createFromFormat('d-m-Y', $date)) {
+            throw new Exception('Incorrect date');
+        }
+
+        return $this->linkRepository->getGroupedLinks($user, $date);
     }
 
 }

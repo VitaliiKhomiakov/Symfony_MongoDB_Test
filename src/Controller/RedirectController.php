@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @Route("/goto", methods="GET")
+ * @Route("/goto")
  */
 class RedirectController extends AbstractController
 {

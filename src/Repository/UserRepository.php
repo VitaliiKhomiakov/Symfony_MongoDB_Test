@@ -11,11 +11,11 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
 class UserRepository implements UserLoaderInterface, ObjectRepository
 {
-    private Builder $builder;
+    private DocumentManager $documentManager;
 
     public function __construct(DocumentManager $documentManager)
     {
-        $this->builder = $documentManager->createQueryBuilder(User::class);
+        $this->documentManager = $documentManager;
     }
 
     public function loadUserByIdentifier(string $identifier): ?User
@@ -25,12 +25,17 @@ class UserRepository implements UserLoaderInterface, ObjectRepository
 
     public function find($id): ?User
     {
-        return $this->builder->field('id')->equals($id)->getQuery()->getSingleResult();
+        return $this->documentManager
+          ->createQueryBuilder(User::class)
+          ->field('id')
+          ->equals($id)
+          ->getQuery()
+          ->getSingleResult();
     }
 
     public function findBy(array $criteria, ?array $orderBy = null, $limit = 20, $offset = 0): ?array
     {
-        $q = $this->builder
+        $q = $this->documentManager->createQueryBuilder(User::class)
           ->limit($limit)
           ->skip($offset);
 
@@ -51,7 +56,7 @@ class UserRepository implements UserLoaderInterface, ObjectRepository
 
     public function getUserByToken(string $token): ?User
     {
-        $tokenDocument = $this->builder->find(Token::class)
+        $tokenDocument = $this->documentManager->createQueryBuilder(Token::class)
             ->field('token')
             ->equals($token)
             ->getQuery()
