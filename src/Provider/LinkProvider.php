@@ -36,7 +36,7 @@ class LinkProvider extends BaseProvider implements LinkProviderInterface
         $link = new Link();
         $link->setLink($url)
           ->setShortLink(base64_encode(substr(str_shuffle($url), 0, 7)))
-          ->setUser($user)
+//          ->setUser($user)
           ->setDate(new \DateTime());
 
         $this->validate($link);
