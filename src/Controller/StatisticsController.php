@@ -23,7 +23,7 @@ class StatisticsController extends AbstractController
     }
 
     /**
-     * @Route("/users", methods="GET")
+     * @Route("/user", methods="GET")
      * @throws Exception
      */
     public function getUsersLinks(): JsonResponse
@@ -34,7 +34,7 @@ class StatisticsController extends AbstractController
     }
 
     /**
-     * @Route("/users/{userId}", methods="GET")
+     * @Route("/user/{userId}", methods="GET")
      * @throws Exception
      */
     public function getUserLinks(string $userId): JsonResponse
