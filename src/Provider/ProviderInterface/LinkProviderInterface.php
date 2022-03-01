@@ -5,7 +5,7 @@ namespace App\Provider\ProviderInterface;
 
 use App\Document\Link;
 use App\Document\User;
-use App\Dto\Model\GroupedLinks;
+use App\Dto\Model\LinkGroupList;
 use App\Repository\LinkRepository;
 use App\Repository\UserRepository;
 use App\Service\ShortLink;
@@ -31,5 +31,5 @@ interface LinkProviderInterface
 
     public function getFullLink(string $shortUrl): ?string;
 
-    public function getGroupedLinks($userId = '', string $date = null): GroupedLinks;
+    public function getLinkGroupList($userId = '', string $date = null): LinkGroupList;
 }

@@ -29,7 +29,7 @@ class StatisticsController extends AbstractController
     public function getUsersLinks(): JsonResponse
     {
         return $this->json([
-          'items' => $this->linkProvider->getGroupedLinks()
+          'items' => $this->linkProvider->getLinkGroupList()
         ]);
     }
 
@@ -40,7 +40,7 @@ class StatisticsController extends AbstractController
     public function getUserLinks(string $userId): JsonResponse
     {
         return $this->json([
-          'items' => $this->linkProvider->getGroupedLinks($userId)
+          'items' => $this->linkProvider->getLinkGroupList($userId)
         ]);
     }
 
@@ -51,7 +51,7 @@ class StatisticsController extends AbstractController
     public function getLinkByDate(string $date): JsonResponse
     {
         return $this->json([
-          'items' => $this->linkProvider->getGroupedLinks(null, $date)
+          'items' => $this->linkProvider->getLinkGroupList(null, $date)
         ]);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Provider;
 
 use App\Document\Link;
 use App\Document\User;
-use App\Dto\Model\GroupedLinks;
+use App\Dto\Model\LinkGroupList;
 use App\Provider\ProviderInterface\LinkProviderInterface;
 use App\Repository\LinkRepository;
 use App\Repository\UserRepository;
@@ -82,10 +82,7 @@ class LinkProvider extends BaseProvider implements LinkProviderInterface
         return $this->linkRepository->getFullLink($shortUrl);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function getGroupedLinks($userId = '', string $date = null): GroupedLinks
+    public function getLinkGroupList($userId = '', string $date = null): LinkGroupList
     {
         $user = null;
         if ($userId) {
@@ -100,7 +97,7 @@ class LinkProvider extends BaseProvider implements LinkProviderInterface
             throw new Exception('Incorrect date');
         }
 
-        return $this->linkRepository->getGroupedLinks($user, $date);
+        return $this->linkRepository->getLinkGroupList($user, $date);
     }
 
 }

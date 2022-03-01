@@ -5,7 +5,13 @@ namespace App\Repository;
 
 use App\Document\Link;
 use App\Document\User;
+use App\Dto\Model\LinkGroup;
+use App\Dto\Model\LinkGroupList;
+use App\Dto\Model\LinkList;
+use App\Dto\Model\User as UserData;
+use App\Dto\Model\Link as LinkData;
 use App\Dto\Model\GroupedLinks;
+use Doctrine\ODM\MongoDB\Aggregation\Aggregation;
 use Doctrine\ODM\MongoDB\Aggregation\Builder as AggregationBuilder;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Query\Builder;
@@ -48,7 +54,7 @@ class LinkRepository
         return $link ? $link->getLink() : null;
     }
 
-    public function getGroupedLinks(?User $user, ?string $date): GroupedLinks
+    public function getLinkGroupList(?User $user, ?string $date): LinkGroupList
     {
         $q = $this->aggregationBuilder;
         if ($user) {
@@ -70,6 +76,27 @@ class LinkRepository
           ->push(['id'=> '$id', 'link' => '$link', 'shortLink' => '$shortLink'])
           ->getAggregation();
 
-        return new GroupedLinks($linksData);
+        return new LinkGroupList($this->prepareGroupLinks($linksData));
+    }
+
+    private function prepareGroupLinks(Aggregation $aggregation): array
+    {
+        $groupedLinks = [];
+        foreach ($aggregation as $data) {
+            $user = new UserData((string)$data['_id']['$id']);
+            $links = $this->prepareLinks($data['link']);
+            $groupedLinks[] = new LinkGroup($user, $links);
+        }
+
+        return $groupedLinks;
+    }
+
+    private function prepareLinks(array $links): array
+    {
+        $preparedLinks = [];
+        foreach ($links as $link) {
+            $preparedLinks[] = new LinkData((string)$link['id'], $link['link'], $link['shortLink']);
+        }
+        return $preparedLinks;
     }
 }
