@@ -50,7 +50,7 @@ class Version20220226224953 extends AbstractMigration
 
         $db->command([
           'collMod' => 'link',
-          'validator' => ['$jsonSchema' => ['required' => [ 'user', 'link', 'shortLink', 'date' ]]]
+          'validator' => ['$jsonSchema' => ['required' => [ 'user', 'link', 'date' ]]]
         ]);
 
         $db->command([

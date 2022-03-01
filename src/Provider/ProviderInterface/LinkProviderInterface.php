@@ -8,6 +8,7 @@ use App\Document\User;
 use App\Dto\Model\GroupedLinks;
 use App\Repository\LinkRepository;
 use App\Repository\UserRepository;
+use App\Service\ShortLink;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -17,7 +18,8 @@ interface LinkProviderInterface
       DocumentManager $documentManager,
       ValidatorInterface $validator,
       LinkRepository $linkRepository,
-      UserRepository $userRepository
+      UserRepository $userRepository,
+      ShortLink $shortLink
     );
 
     public function createLink(User $user, string $url);

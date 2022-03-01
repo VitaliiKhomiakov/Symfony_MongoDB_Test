@@ -6,6 +6,7 @@ use AntiMattr\MongoDB\Migrations\AbstractMigration;
 use App\Document\Link;
 use App\Document\Token;
 use App\Document\User;
+use App\Service\ShortLink;
 use MongoDB\Database;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,10 +17,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Version20220226224956 extends AbstractMigration implements ContainerAwareInterface
 {
     private ContainerInterface $container;
+    private ShortLink $shortLink;
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+        $this->shortLink = new ShortLink();
     }
 
     /**
@@ -104,7 +107,7 @@ class Version20220226224956 extends AbstractMigration implements ContainerAwareI
         $link = new Link();
         $link->setUser($user);
         $link->setLink($url);
-        $link->setShortLink(base64_encode(substr(str_shuffle($url), 0, 7)));
+        $link->setShortLink($this->shortLink->generate());
         $link->setDate(new \DateTime());
         return $link;
     }

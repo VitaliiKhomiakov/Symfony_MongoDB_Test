@@ -5,8 +5,8 @@ namespace App\Controller;
 
 use App\Provider\LinkProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/goto")
@@ -24,11 +24,9 @@ class RedirectController extends AbstractController
      * @Route("/", methods="GET")
      * @Route("/{url}", methods="GET")
      */
-    public function getRedirectLink(string $url): JsonResponse
+    public function getRedirectLink(string $url): RedirectResponse
     {
         $link = $this->linkProvider->getFullLink($url);
-        return $this->json([
-          'items' => $link ? [$link] : []
-        ]);
+        return new RedirectResponse($link);
     }
 }

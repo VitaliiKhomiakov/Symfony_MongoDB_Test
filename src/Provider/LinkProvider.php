@@ -9,6 +9,7 @@ use App\Dto\Model\GroupedLinks;
 use App\Provider\ProviderInterface\LinkProviderInterface;
 use App\Repository\LinkRepository;
 use App\Repository\UserRepository;
+use App\Service\ShortLink;
 use DateTime;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
@@ -20,17 +21,20 @@ class LinkProvider extends BaseProvider implements LinkProviderInterface
     private Link $link;
     private LinkRepository $linkRepository;
     private UserRepository $userRepository;
+    private ShortLink $shortLink;
 
     public function __construct(
       DocumentManager $documentManager,
       ValidatorInterface $validator,
       LinkRepository $linkRepository,
-      UserRepository $userRepository
+      UserRepository $userRepository,
+      ShortLink $shortLink
     )
     {
         parent::__construct($documentManager, $validator);
         $this->linkRepository = $linkRepository;
         $this->userRepository = $userRepository;
+        $this->shortLink = $shortLink;
     }
 
     /**
@@ -41,7 +45,7 @@ class LinkProvider extends BaseProvider implements LinkProviderInterface
     {
         $link = new Link();
         $link->setLink($url)
-          ->setShortLink(base64_encode(substr(str_shuffle($url), 0, 7)))
+          ->setShortLink($this->shortLink->generate())
           ->setUser($user)
           ->setDate(new \DateTime());
 
